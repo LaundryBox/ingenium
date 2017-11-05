@@ -8,6 +8,19 @@ MIN_SURNAME_COUNT = 100
 MIN_FIRST_NAME_COUNT = 5
 
 FirstNameStats = collections.namedtuple('FirstNameStats', ['name', 'gender', 'count'])
+
+"""SurnameStats value definitions
+    rank = Rank;
+    count = Number of occurrences;
+    prop100k = Proportion per 100,000 people for name;
+    cum_prop100k = Cumulative proportion per 100,000 people;
+    pctwhite = Percent Non-Hispanic White Only;
+    pctblack = Percent Non-Hispanic Black Only;
+    pctapi = Percent Non-Hispanic Asian and Pacific Islander Only;
+    pctaian = Percent Non-Hispanic American Indian and Alaskan Native Only;
+    pct2prace = Percent Non-Hispanic of Two or More Races;
+    pcthispanic = Percent Hispanic Origin
+"""
 SurnameStats = collections.namedtuple('SurnameStats', ['name', 'rank', 'count', 'prop100k', 'cum_prop100k', 'pctwhite',
                                                        'pctblack', 'pctapi', 'pctaian', 'pct2prace', 'pcthispanic'])
 
@@ -44,15 +57,6 @@ def load_first_names_by_year(year, weighted=False, initial=None):
 
 
 def load_surnames(weighted=False, initial=None):
-    """
-    name = Last name; rank = Rank; count = Number of occurrences; prop100k = Proportion per 100,000 people for name;
-    cum_prop100k = Cumulative proportion per 100,000 people; pctwhite = Percent Non-Hispanic White Only;
-    pctblack = Percent Non-Hispanic Black Only; pctapi = Percent Non-Hispanic Asian and Pacific Islander Only;
-    pctaian = Percent Non-Hispanic American Indian and Alaskan Native Only;
-    pct2prace = Percent Non-Hispanic of Two or More Races; pcthispanic = Percent Hispanic Origin
-
-    :return:
-    """
     surname_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/surnames_by_race.zip")
     surnames_zip = zipfile.ZipFile(surname_file)
 
@@ -76,12 +80,9 @@ def generate_names(args):
         first = random.choice(first_names[args.gender])
         last = random.choice(surnames)
 
-        name = "{first} {last}".format(first=first.title(), last=last.title())
-
-        print(name)
+        print("{first} {last}".format(first=first.title(), last=last.title()))
 
 
 if __name__ == "__main__":
     parsed_args = build_parser().parse_args()
     generate_names(parsed_args)
-
