@@ -25,28 +25,6 @@ def build_parser():
     return argparser
 
 
-def load_first_names_all():
-    first_name_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/first_names_by_year.zip")
-    names_zip = zipfile.ZipFile(first_name_file)
-
-    names_by_year = {}
-
-    for filename in names_zip.namelist():
-        if filename.lower().startswith('yob'):
-            year = int(filename[3:7])
-
-            names_by_year[year] = {'male': [], 'female': []}
-
-            for line in names_zip.read(filename).splitlines():
-                name_stats = FirstNameStats(*str(line).split(','))
-                if name_stats.gender == 'F':
-                    names_by_year[year]['female'].append(name_stats)
-                else:
-                    names_by_year[year]['male'].append(name_stats)
-
-    return names_by_year
-
-
 def load_first_names_by_year(year, weighted=False, initial=None):
     first_name_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/first_names_by_year.zip")
     names_zip = zipfile.ZipFile(first_name_file)
