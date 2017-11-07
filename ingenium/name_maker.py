@@ -51,7 +51,7 @@ def build_parser():
 def race_percent(surname_stats, race):
     if race in race_arg_map:
         try:
-            return float(surname_stats.__getattribute__(race_arg_map[race]))
+            return float(surname_stats.__getattribute__(race_arg_map[race]))/100.0
         except ValueError:
             return 0.0
     else:
@@ -85,8 +85,11 @@ def load_surnames(weighted=False, initial=None, race=None):
 
     for line in surnames_zip.read("app_c.csv").splitlines()[1:]:
         surname_stats = SurnameStats(*line.decode().split(','))
-        relative_name_count = int(int(surname_stats.count) / MIN_SURNAME_COUNT) if weighted else 1
-        relative_name_count *= race_percent(surname_stats, race) if race else 1
+        if race and not weighted:
+            relative_name_count = 1 if race_percent(surname_stats, race) > 0.5 else 0
+        else:
+            relative_name_count = int(surname_stats.count) / MIN_SURNAME_COUNT if weighted else 1
+            relative_name_count *= race_percent(surname_stats, race) if race else 1
 
         if not initial or (initial and surname_stats.name.lower().startswith(initial.lower())):
             surnames += [surname_stats.name for _ in range(int(relative_name_count))]
